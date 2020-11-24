@@ -1,29 +1,25 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css';
 import axios from 'axios'
 
-function convert(start, endUnit, round) {
-  if (endUnit && endUnit.toLocaleLowerCase() === "c") {
-    return start - 273.15
-  } else {
-    return (start - 273.15) * 1.8 + 32
-  }
-}
+const convert = (start, endUnit, round) => endUnit && endUnit.toLocaleLowerCase() === "c" ? start - 273.15 : (start - 273.15) * 1.8 + 32
 
-function round(num, amount) {
-  return Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount||0)
-}
+const round = (num, amount) => Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount || 0)
 
-function App() {
+const fetchWeather = async (value, callback) => axios.get(`https://weather-lilac.vercel.app/api?value=${encodeURIComponent(value)}`).then(res => callback(res.data))
+
+const App = () => {
   const [section, setSection] = useState('')
   const [area, setArea] = useState('')
   const [weather, setWeather] = useState({})
   const [unit, setUnit] = useState(true)
-  axios.get(`http://ip-api.com/json/?fields=zip`).then(res => res.data.zip)
+  useEffect(() => {
+    axios.get(`http://ip-api.com/json/?fields=zip`).then(res => res.data.zip)
     .then(res => {
       setArea(res)
-      axios.get(`https://weather-lilac.vercel.app/api?value=${encodeURIComponent(res)}`).then(res => setWeather(res.data))
+      fetchWeather(res, setWeather)
     })
+  }, [])
   return (
     <>
       <ul>
@@ -33,8 +29,7 @@ function App() {
           if (e.key === 'Enter') {
             const value = parseInt(document.getElementById('search').value)
             setArea(value)
-            axios.get(`https://weather-lilac.vercel.app/api?value=${encodeURIComponent(value)}`)
-              .then(res => setWeather(res.data))
+            fetchWeather(value, setWeather)
           }
         }} placeholder="Type in a zip code..."></input></li>
         <li className="search"><input type="checkbox"  /> Celcius</li>
@@ -48,7 +43,6 @@ function App() {
 }
 function Daily(props) {
   const [day, setDay] = useState(0);
-  const renderDailyWeather = n => `${weather[n].weather[0].description}, the tempature is ${round(convert(weather[n].temp.day))}, the high is ${round(convert(weather[n].temp.max))}, the low is ${round(convert(weather[n].temp.min))}`
   const weather = props.weather.daily || Array(7).fill('Loading...')
   return (
     <div className="section daily">
@@ -59,20 +53,14 @@ function Daily(props) {
             <th>Day</th>
             <th>Weather</th>
           </tr>
-          <tr key={1}>
-            <td>Today</td>
-            <td>{renderDailyWeather(0)} <button onClick={() => setDay(1)}>Find out more</button></td>
-          </tr>
-          <tr key={2}>
-            <td>Tomorrow</td>
-            <td>{renderDailyWeather(1)} <button onClick={() => setDay(2)}>Find out more</button></td>
-          </tr>
           {
-            Array(5).fill().map((_, i) => {
+            Array(7).fill().map((_, i) => {
+              const dt = new Date(weather[i].dt * 1000).toDateString()
+              const date = dt === new Date().toDateString() ? 'Today' : dt === (new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)).toDateString() ? 'Tomorrow' : dt
               return (
-                <tr key={i+3}>
-                  <td>{(new Date(Date.now() + (i + 2) * 24 * 60 * 60 * 1000)).toDateString()}</td>
-                  <td>{renderDailyWeather(i + 2)} <button onClick={() => setDay(i + 3)}>Find out more</button></td>
+                <tr key={i+1}>
+                  <td>{date}</td>
+                  <td>{weather[i].weather ? `${weather[i].weather[0].description}, the tempature is ${round(convert(weather[i].temp.day))}, the high is ${round(convert(weather[i].temp.max))}, the low is ${round(convert(weather[i].temp.min))}` : weather[i]} <button onClick={() => setDay(i+1)}>Find out more</button></td>
                 </tr>
               )
             })
