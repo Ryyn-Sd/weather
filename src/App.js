@@ -8,6 +8,8 @@ const round = (num, amount) => Math.round(Number(num) * 10 ** (amount || 0)) / 1
 
 const fetchWeather = async (value, callback) => axios.get(`https://weather-lilac.vercel.app/api?value=${encodeURIComponent(value)}`).then(res => callback(res.data))
 
+const dt = dt => (new Date(dt * 1000)).toDateString() === new Date().toDateString() ? 'Today' : (new Date(dt * 1000)).toDateString() === (new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)).toDateString() ? 'Tomorrow' : (new Date(dt * 1000)).toDateString()
+
 const App = () => {
   const [section, setSection] = useState('')
   const [area, setArea] = useState('')
@@ -41,8 +43,8 @@ const App = () => {
     </>
   );
 }
-function Daily(props) {
-  const [day, setDay] = useState(0);
+const Daily = props => {
+  const [day, setDay] = useState(-1);
   const weather = props.weather.daily || Array(7).fill('Loading...')
   return (
     <div className="section daily">
@@ -54,26 +56,22 @@ function Daily(props) {
             <th>Weather</th>
           </tr>
           {
-            Array(7).fill().map((_, i) => {
-              const dt = new Date(weather[i].dt * 1000).toDateString()
-              const date = dt === new Date().toDateString() ? 'Today' : dt === (new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)).toDateString() ? 'Tomorrow' : dt
-              return (
-                <tr key={i+1}>
-                  <td>{date}</td>
-                  <td>{weather[i].weather ? `${weather[i].weather[0].description}, the tempature is ${round(convert(weather[i].temp.day))}, the high is ${round(convert(weather[i].temp.max))}, the low is ${round(convert(weather[i].temp.min))}` : weather[i]} <button onClick={() => setDay(i+1)}>Find out more</button></td>
-                </tr>
-              )
-            })
+            weather.map((v, i) => (
+              <tr key={i+1}>
+                <td>{dt(v.dt)}</td>
+                <td>{v.weather ? `${v.weather[0].description}, the tempature is ${round(convert(v.temp.day))}, the high is ${round(convert(v.temp.max))}, the low is ${round(convert(v.temp.min))}` : v} <button onClick={() => setDay(i)}>Find out more</button></td>
+              </tr>
+            ))
           }
         </tbody>
       </table>
-      {day > 0 ? <DisplayDay area={props.area} day={day} weather={props.weather}/> : null}
+      {day >= 0 ? <DisplayDay weather={weather[day]}/> : null}
     </div>
   )
 }
 
 function Hourly(props) {
-  const renderHourlyWeather = n => `${weather[n].weather[0].description}, the tempature is ${round(convert(weather[n].temp))}`
+  const toHourString = date => `${date.getHours() === 0 ? 12 : date.getHours() > 12 ? date.getHours() - 12 : date.getHours()}:00 ${date.getHours() >= 12 ? "PM" : "AM"}`
   const weather = props.weather.hourly || Array(24).fill('Loading...')
   return (
     <div className="section hourly">
@@ -85,14 +83,12 @@ function Hourly(props) {
             <th>Weather</th>
           </tr>
           {
-            Array(24).fill().map((_, i) => {
-              return (
-                <tr key={i+1}>
-                  <td>{(new Date(Date.now() + (i) * 60 * 60 * 1000)).getHours() === 0 ? 12 : (new Date(Date.now() + (i) * 60 * 60 * 1000)).getHours() > 12 ? (new Date(Date.now() + (i) * 60 * 60 * 1000)).getHours() - 12 : (new Date(Date.now() + (i) * 60 * 60 * 1000)).getHours()}:00 {(new Date(Date.now() + (i) * 60 * 60 * 1000)).getHours() >= 12 ? "PM" : "AM"}</td>
-                  <td>{renderHourlyWeather(i)}</td>
-                </tr>
-              )
-            })
+            Array(24).fill().map((_, i) => (
+              <tr key={i+1}>
+                <td>{toHourString(new Date(weather[i].dt * 1000))}</td>
+                <td>{weather[i].weather[0].description}, the tempature is {round(convert(weather[i].temp))}</td>
+              </tr>
+            ))
           }
         </tbody>
       </table>
@@ -100,15 +96,12 @@ function Hourly(props) {
   )
 }
 
-function DisplayDay(props) {
-  const weather = () => props.weather.daily[props.day - 1]  
-  return (
-    <div className="DisplayDay">
-      <h1>{props.day === 1 ? 'Today' : props.day === 2 ? 'Tomorrow': (new Date(Date.now() + (props.day - 1) * 24 * 60 * 60 * 1000)).toDateString()}</h1>
-      {JSON.stringify(weather())}
-    </div>
-  )
-}
+const DisplayDay = (props) => (
+  <div className="DisplayDay">
+    <h1>{dt(props.weather.dt)}</h1>
+    {JSON.stringify(props.weather)}
+  </div>
+)
 
 // {"dt":1606150800,"sunrise":1606133752,"sunset":1606168601,"temp":{"day":278.8,"min":276.24,"max":279.95,"night":276.94,"eve":277.01,"morn":276.24},"feels_like":{"day":273.31,"night":273.47,"eve":272.36,"morn":271.4},"pressure":1023,"humidity":66,"dew_point":273.02,"wind_speed":4.97,"wind_deg":287,"weather":[{"id":500,"main":"Rain","description":"light rain","icon":"10d"}],"clouds":63,"pop":1,"rain":1.37,"uvi":1.72}
 
