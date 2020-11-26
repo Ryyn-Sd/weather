@@ -46,6 +46,7 @@ const App = () => {
     );
 }
 const Daily = props => {
+<<<<<<< HEAD
     const [day, setDay] = useState(-1);
     const weather = props.weather.daily || Array(7).fill('Loading...')
     return (
@@ -142,6 +143,66 @@ const DisplayDay = (props) => {
         </div>
     )
 }
+=======
+  const [day, setDay] = useState(-1);
+  const weather = props.weather.daily || Array(7).fill('Loading...')
+  return (
+    <div className="section daily">
+      <h1>Daily Weather for {props.area}</h1>
+      <table>
+        <tbody>
+          <tr key={0}>
+            <th>Day</th>
+            <th>Weather</th>
+          </tr>
+          {
+            weather.map((v, i) => (
+              <tr key={i+1}>
+                <td>{dt(v.dt)}</td>
+                <td>{v.weather ? `${v.weather[0].description}, the tempature is ${round(convert(v.temp.day))}, the high is ${round(convert(v.temp.max))}, the low is ${round(convert(v.temp.min))}` : v} <button onClick={() => setDay(i)}>Find out more</button></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      {day >= 0 ? <DisplayDay weather={weather[day]}/> : null}
+    </div>
+  )
+}
+
+function Hourly(props) {
+  const toHourString = date => `${date.getHours() === 0 ? 12 : date.getHours() > 12 ? date.getHours() - 12 : date.getHours()}:00 ${date.getHours() >= 12 ? "PM" : "AM"}`
+  const weather = props.weather.hourly || Array(24).fill('Loading...')
+  return (
+    <div className="section hourly">
+      <h1>Hourly Weather for {props.area}</h1>
+      <table>
+        <tbody>
+          <tr key={0}>
+            <th>Time</th>
+            <th>Weather</th>
+          </tr>
+          {
+            Array(24).fill().map((_, i) => (
+              <tr key={i+1}>
+                <td>{toHourString(new Date(weather[i].dt * 1000))}</td>
+                <td>{weather[i].weather[0].description}, the tempature is {round(convert(weather[i].temp))}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+const DisplayDay = (props) => (
+  <div className="DisplayDay">
+    <h1>{dt(props.weather.dt)}</h1>
+    {JSON.stringify(props.weather)}
+  </div>
+)
+>>>>>>> 930b9b5085a068d657826e415535f0ac90af4967
 
 
 export default App;
