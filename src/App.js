@@ -52,7 +52,7 @@ const App = () => {
     const localUnit = localStorage.getItem('unit')
     if (localUnit === 'm' || localUnit === 'i') setUnit(localUnit)
     axios
-      .get(`http://ip-api.com/json/?fields=zip`)
+      .get(`https://weather-lilac.vercel.app/api/ip`)
       .then(res => res.data.zip)
       .then(res => {
         setArea(res)
@@ -180,7 +180,7 @@ function Hourly(props) {
 
 const DisplayDay = props => {
   const { weather } = props
-  console.log(weather) // {"dt":1606410000,"sunrise":1606393150,"sunset":1606427714,"temp":{"day":284.7,"min":282.89,"max":284.7,"night":282.89,"eve":283.55,"morn":283.55},"feels_like":{"day":281.48,"night":280.75,"eve":281.35,"morn":280.38},"pressure":1016,"humidity":81,"dew_point":281.56,"wind_speed":4.07,"wind_deg":244,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],"clouds":90,"pop":1,"rain":3.84,"uvi":1.77}
+  // console.log(weather) // {"dt":1606410000,"sunrise":1606393150,"sunset":1606427714,"temp":{"day":284.7,"min":282.89,"max":284.7,"night":282.89,"eve":283.55,"morn":283.55},"feels_like":{"day":281.48,"night":280.75,"eve":281.35,"morn":280.38},"pressure":1016,"humidity":81,"dew_point":281.56,"wind_speed":4.07,"wind_deg":244,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],"clouds":90,"pop":1,"rain":3.84,"uvi":1.77}
   return (
     <div className="DisplayDay" style={{ margin: 64 }}>
       <h1>{dt(weather.dt)}</h1>
