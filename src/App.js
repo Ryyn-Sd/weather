@@ -98,7 +98,7 @@ const App = () => {
           <h1>Viewing weather for {area}</h1>
           <h3>
             Click on Daily or Hourly to see the weather. You can change the zip
-            code in the top right corner. You can change the units using the metric checkbox
+            code in the top right corner. You can change the units using the metric checkbox.
           </h3>
         </div>
       ) : null}
@@ -258,12 +258,6 @@ const DisplayDay = props => {
               </td>
             </tr>
           </table>
-          {/*  
-            description
-            clouds
-            wind_deg
-            wind_speed
-          */}
         </div>
         <div className="flex-2">
           <table>
