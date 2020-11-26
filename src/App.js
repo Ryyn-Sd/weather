@@ -1,147 +1,330 @@
 import React, { useState, useEffect } from 'react'
-import './App.css';
+import './App.css'
 import axios from 'axios'
 import icons from './icons'
 
-const convert = (start, endUnit, round) => endUnit && endUnit.toLocaleLowerCase() === "c" ? start - 273.15 : (start - 273.15) * 1.8 + 32
+const convert = (start, endUnit, round) => {
+  const temp =
+    endUnit && endUnit.toLocaleLowerCase() === 'm'
+      ? start - 273.15
+      : (start - 273.15) * 1.8 + 32
+  return (
+    Math.round(temp).toString() +
+    (endUnit && endUnit.toLocaleLowerCase() === 'm' ? ' ˚C' : ' ˚F')
+  )
+}
 
-const round = (num, amount) => Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount || 0)
+const toTimeString = date =>
+  `${
+    new Date(date * 1000).getHours() === 0
+      ? 12
+      : new Date(date * 1000).getHours() > 12
+      ? new Date(date * 1000).getHours() - 12
+      : new Date(date * 1000).getHours()
+  }:${('0' + new Date(date * 1000).getMinutes()).slice(-2)} ${
+    new Date(date * 1000).getHours() >= 12 ? 'PM' : 'AM'
+  }`
 
-const fetchWeather = async (value, callback) => axios.get(`https://weather-lilac.vercel.app/api?value=${encodeURIComponent(value)}`).then(res => callback(res.data))
+// const round = (num, amount) =>
+//   Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount || 0);
 
-const dt = dt => (new Date(dt * 1000)).toDateString() === new Date().toDateString() ? 'Today' : (new Date(dt * 1000)).toDateString() === (new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)).toDateString() ? 'Tomorrow' : (new Date(dt * 1000)).toDateString()
+const fetchWeather = async (value, callback) =>
+  axios
+    .get(
+      `https://weather-lilac.vercel.app/api?value=${encodeURIComponent(value)}`
+    )
+    .then(res => callback(res.data))
+
+const dt = dt =>
+  new Date(dt * 1000).toDateString() === new Date().toDateString()
+    ? 'Today'
+    : new Date(dt * 1000).toDateString() ===
+      new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toDateString()
+    ? 'Tomorrow'
+    : new Date(dt * 1000).toDateString()
 
 const App = () => {
-    const [section, setSection] = useState('')
-    const [area, setArea] = useState('')
-    const [weather, setWeather] = useState({})
-    const [unit, setUnit] = useState(true)
-    useEffect(() => {
-        axios.get(`http://ip-api.com/json/?fields=zip`).then(res => res.data.zip)
-            .then(res => {
-                setArea(res)
-                fetchWeather(res, setWeather)
-            })
-    }, [])
-    return (
-        <>
-            <ul>
-                <li onClick={() => setSection('daily')}>Daily</li>
-                <li onClick={() => setSection('hourly')}>Hourly</li>
-                <li className="search"><input id="search" type="text" onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                        const value = parseInt(document.getElementById('search').value)
-                        setArea(value)
-                        fetchWeather(value, setWeather)
-                    }
-                }} placeholder="Type in a zip code..."></input></li>
-                <li className="search"><input type="checkbox" /> Celcius</li>
-            </ul>
-
-            <img src={icons["01d"]} />
-            {section !== 'daily' && section !== 'hourly' ? <div><h1>Viewing weather for {area}</h1><h3>Click on Daily or Hourly to see the weather. You can change the zip code in the top right corner. You can change the unit using the Celcius checkbox.</h3></div> : null}
-            {section === 'daily' ? <Daily area={area} weather={weather} /> : null}
-            {section === 'hourly' ? <Hourly area={area} weather={weather} /> : null}
-        </>
-    );
+  const [section, setSection] = useState('')
+  const [area, setArea] = useState('')
+  const [weather, setWeather] = useState({})
+  const [unit, setUnit] = useState('i')
+  useEffect(() => {
+    const localUnit = localStorage.getItem('unit')
+    if (localUnit === 'm' || localUnit === 'i') setUnit(localUnit)
+    axios
+      .get(`http://ip-api.com/json/?fields=zip`)
+      .then(res => res.data.zip)
+      .then(res => {
+        setArea(res)
+        fetchWeather(res, setWeather)
+      })
+  }, [])
+  return (
+    <>
+      <ul>
+        <li onClick={() => setSection('daily')}>Daily</li>
+        <li onClick={() => setSection('hourly')}>Hourly</li>
+        <li className="search">
+          <input
+            id="search"
+            type="text"
+            onKeyPress={e => {
+              if (e.key === 'Enter') {
+                const value = parseInt(document.getElementById('search').value)
+                setArea(value)
+                fetchWeather(value, setWeather)
+              }
+            }}
+            placeholder="Type in a zip code..."
+          ></input>
+        </li>
+        <li className="search">
+          <input
+            type="checkbox"
+            checked={unit === 'm' ? true : false}
+            onChange={e => {
+              localStorage.setItem('unit', e.target.checked ? 'm' : 'i')
+              setUnit(e.target.checked ? 'm' : 'i')
+            }}
+          />
+          Metric Units
+        </li>
+      </ul>
+      {weather.current ? (
+        <img src={icons[weather.daily[0].weather[0].icon]} alt="" />
+      ) : null}
+      {section !== 'daily' && section !== 'hourly' ? (
+        <div>
+          <h1>Viewing weather for {area}</h1>
+          <h3>
+            Click on Daily or Hourly to see the weather. You can change the zip
+            code in the top right corner. You can change the unit using the
+            Celcius checkbox.
+          </h3>
+        </div>
+      ) : null}
+      {section === 'daily' ? (
+        <Daily area={area} weather={weather} unit={unit} />
+      ) : null}
+      {section === 'hourly' ? (
+        <Hourly area={area} weather={weather} unit={unit} />
+      ) : null}
+    </>
+  )
 }
 const Daily = props => {
-    const [day, setDay] = useState(-1);
-    const weather = props.weather.daily || Array(7).fill('Loading...')
-    return (
-        <div className="section daily">
-            <h1>Daily Weather for {props.area}</h1>
-            <table>
-                <tbody>
-                    <tr key={0}>
-                        <th>Day</th>
-                        <th>Weather</th>
-                    </tr>
-                    {
-                        weather.map((v, i) => (
-                            <tr key={i + 1}>
-                                <td>{dt(v.dt)}</td>
-                                <td>{v.weather ? `${v.weather[0].description}, the tempature is ${round(convert(v.temp.day))}, the high is ${round(convert(v.temp.max))}, the low is ${round(convert(v.temp.min))}` : v} <button onClick={() => setDay(i)}>Find out more</button></td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
-            {day >= 0 ? <DisplayDay weather={weather[day]} /> : null}
-        </div>
-    )
+  const [day, setDay] = useState(-1)
+  const weather = props.weather.daily || Array(7).fill('Loading...')
+  if (weather.weather) weather.sort((a, b) => a.dt - b.dt)
+  return (
+    <div className="section daily">
+      <h1>Daily Weather for {props.area}</h1>
+      <table>
+        <tbody>
+          <tr key={0}>
+            <th>Day</th>
+            <th>Weather</th>
+          </tr>
+          {weather.map((v, i) => (
+            <tr key={i + 1}>
+              <td>{dt(v.dt)}</td>
+              <td>
+                {v.weather
+                  ? `${v.weather[0].description}, the tempature is ${convert(
+                      v.temp.day,
+                      props.unit
+                    )}, the high is ${convert(
+                      v.temp.max,
+                      props.unit
+                    )}, the low is ${convert(v.temp.min, props.unit)}`
+                  : v}{' '}
+                <button onClick={() => setDay(i)}>Find out more</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {day >= 0 ? (
+        <DisplayDay weather={weather[day]} unit={props.unit} />
+      ) : null}
+    </div>
+  )
 }
 
 function Hourly(props) {
-    const toHourString = date => `${date.getHours() === 0 ? 12 : date.getHours() > 12 ? date.getHours() - 12 : date.getHours()}:00 ${date.getHours() >= 12 ? "PM" : "AM"}`
-    const weather = props.weather.hourly || Array(24).fill('Loading...')
-    return (
-        <div className="section hourly">
-            <h1>Hourly Weather for {props.area}</h1>
-            <table>
-                <tbody>
-                    <tr key={0}>
-                        <th>Time</th>
-                        <th>Weather</th>
-                    </tr>
-                    {
-                        Array(24).fill().map((_, i) => (
-                            <tr key={i + 1}>
-                                <td>{toHourString(new Date(weather[i].dt * 1000))}</td>
-                                <td>{weather[i].weather[0].description}, the tempature is {round(convert(weather[i].temp))}</td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
-        </div>
-    )
+  const weather = props.weather.hourly || Array(24).fill('Loading...')
+  if (weather.weather) weather.sort((a, b) => a.dt - b.dt)
+  console.log(weather)
+  return (
+    <div className="section hourly">
+      <h1>Hourly Weather for {props.area}</h1>
+      <table>
+        <tbody>
+          <tr key={0}>
+            <th>Time</th>
+            <th>Weather</th>
+          </tr>
+          {weather.map((v, i) => (
+            <tr key={i + 1}>
+              <td>{toTimeString(v.dt)}</td>
+              <td>
+                {v.weather[0].description}, the tempature is{' '}
+                {convert(v.temp, props.unit)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
 }
 
-const DisplayDay = (props) => {
-    const { weather } = props
-    return (
-        <div className="DisplayDay" style={{margin: 64}}>
-            <h1>{dt(weather.dt)}</h1>
-            <div class="flex-container">
-                <div class="flex-1">
-                    <table>
-                        <thead>
-                        <th colspan={2}><h3>Day details</h3></th>
-                        </thead>
-                        <tbody>
-                            <tr><th>Day</th><td>Friday the 13th</td></tr>
-                            <tr><td>Sunrise</td><td>6:00 AM</td></tr>
-                            <tr><td>Sunset</td><td>6:00 PM</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="flex-2">
-                    <table>
-                      <thead><th colspan={2}><h3>Tempature</h3></th></thead>
-                        <tbody>
-                          <tr><th>Tempature</th><td>30˚ F.</td></tr>
-                          <tr><th>High</th><td>60˚ F.</td></tr>
-                          <tr><th>Low</th><td>10˚ F.</td></tr>
-                          <tr><th>Night</th><td>11˚ F.</td></tr>
-                          <tr><th>Evening</th><td>15˚ F.</td></tr>
-                          <tr><th>Morning</th><td>14˚ F.</td></tr>
-                        </tbody>
-                    </table>
-                    <table>
-                      <thead><th colspan={2}><h3>Feels Like</h3></th></thead>
-                        <tbody>
-                          <tr><th>Tempature</th><td>30˚ F.</td></tr>
-                          <tr><th>High</th><td>60˚ F.</td></tr>
-                          <tr><th>Low</th><td>10˚ F.</td></tr>
-                          <tr><th>Night</th><td>11˚ F.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+const DisplayDay = props => {
+  const { weather } = props
+  console.log(weather) // {"dt":1606410000,"sunrise":1606393150,"sunset":1606427714,"temp":{"day":284.7,"min":282.89,"max":284.7,"night":282.89,"eve":283.55,"morn":283.55},"feels_like":{"day":281.48,"night":280.75,"eve":281.35,"morn":280.38},"pressure":1016,"humidity":81,"dew_point":281.56,"wind_speed":4.07,"wind_deg":244,"weather":[{"id":501,"main":"Rain","description":"moderate rain","icon":"10d"}],"clouds":90,"pop":1,"rain":3.84,"uvi":1.77}
+  return (
+    <div className="DisplayDay" style={{ margin: 64 }}>
+      <h1>{dt(weather.dt)}</h1>
+      <img src={icons[weather.weather[0].icon]} alt="" />
+      <div className="flex-container">
+        <div className="flex-1">
+          <table>
+            <thead>
+              <th colspan={2}>
+                <h3>Day details</h3>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Day</th>
+                <td>{dt(weather.dt)}</td>
+              </tr>
+              <tr>
+                <th>Sunrise</th>
+                <td>{toTimeString(weather.sunrise)}</td>
+              </tr>
+              <tr>
+                <th>Sunset</th>
+                <td>{toTimeString(weather.sunset)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table>
+            <thead>
+              <th colspan={2}>
+                <h3>Air</h3>
+              </th>
+            </thead>
+            <tr>
+              <th>Pressure</th>
+              <td>{weather.pressure * 1000} (in pascals)</td>
+            </tr>
+            <tr>
+              <th>Huminity</th>
+              <td>{weather.humidity}</td>
+            </tr>
+            <tr>
+              <th>Dew Point</th>
+              <td>{convert(weather.dew_point, props.unit)}</td>
+            </tr>
+            <tr>
+              <th>UVI</th>
+              <td>{weather.uvi}</td>
+            </tr>
+          </table>
+          <table>
+            <thead>
+              <th colspan={2}>
+                <h3>Other</h3>
+              </th>
+            </thead>
+            <tr>
+              <th>Description</th>
+              <td>{weather.weather[0].description}</td>
+            </tr>
+            <tr>
+              <th>Clouds</th>
+              <td>{weather.clouds}%</td>
+            </tr>
+            <tr>
+              <th>Wind Tempature</th>
+              <td>{convert(weather.wind_deg, props.unit)}</td>
+            </tr>
+            <tr>
+              <th>Wind Speed</th>
+              <td>
+                {props.unit === 'i'
+                  ? Math.round(weather.wind_speed * 2.23694).toString() + ' mph'
+                  : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
+              </td>
+            </tr>
+          </table>
+          {/*  
+            description
+            clouds
+            wind_deg
+            wind_speed
+          */}
         </div>
-    )
+        <div className="flex-2">
+          <table>
+            <thead>
+              <th colspan={2}>
+                <h3>Tempature</h3>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Tempature</th>
+                <td>{convert(weather.temp.day, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>High</th>
+                <td>{convert(weather.temp.max, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Low</th>
+                <td>{convert(weather.temp.min, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Night</th>
+                <td>{convert(weather.temp.night, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Morning</th>
+                <td>{convert(weather.temp.morn, props.unit)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table>
+            <thead>
+              <th colspan={2}>
+                <h3>Feels Like</h3>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Tempature</th>
+                <td>{convert(weather.feels_like.day, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Morning</th>
+                <td>{convert(weather.feels_like.morn, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Evening</th>
+                <td>{convert(weather.feels_like.eve, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Night</th>
+                <td>{convert(weather.feels_like.night, props.unit)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-
-export default App;
+export default App

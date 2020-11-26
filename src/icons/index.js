@@ -16,6 +16,6 @@ const icons = {
   '10d': ten,
   '11d': eleven,
   '13d': thirteen,
-  '50d': fifty,
+  '50d': fifty
 }
 export default icons
