@@ -110,13 +110,13 @@ const DisplayDay = (props) => {
                         <th colspan={2}><h3>Day details</h3></th>
                         </thead>
                         <tbody>
+                            <tr><th>Day</th><td>Friday the 13th</td></tr>
                             <tr><td>Sunrise</td><td>6:00 AM</td></tr>
                             <tr><td>Sunset</td><td>6:00 PM</td></tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="flex-2">
-                    
                     <table>
                       <thead><th colspan={2}><h3>Tempature</h3></th></thead>
                         <tbody>
@@ -126,6 +126,15 @@ const DisplayDay = (props) => {
                           <tr><th>Night</th><td>11˚ F.</td></tr>
                           <tr><th>Evening</th><td>15˚ F.</td></tr>
                           <tr><th>Morning</th><td>14˚ F.</td></tr>
+                        </tbody>
+                    </table>
+                    <table>
+                      <thead><th colspan={2}><h3>Feels Like</h3></th></thead>
+                        <tbody>
+                          <tr><th>Tempature</th><td>30˚ F.</td></tr>
+                          <tr><th>High</th><td>60˚ F.</td></tr>
+                          <tr><th>Low</th><td>10˚ F.</td></tr>
+                          <tr><th>Night</th><td>11˚ F.</td></tr>
                         </tbody>
                     </table>
                 </div>
