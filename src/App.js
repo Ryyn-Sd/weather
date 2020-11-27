@@ -221,7 +221,7 @@ const DisplayDay = props => {
                 <td>{weather.pressure * 1000} (in pascals)</td>
               </tr>
               <tr>
-                <th>Huminity</th>
+                <th>Humidity</th>
                 <td>{weather.humidity}%</td>
               </tr>
               <tr>
