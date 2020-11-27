@@ -68,7 +68,7 @@ const App = () => {
               if (e.key === 'Enter') {
                 const value = parseInt(document.getElementById('search').value)
                 setArea(value)
-                fetchWeather(value, setWeather)
+                fetchWeather(setWeather, value)
               }
             }}
             placeholder="Type in a zip code..."
@@ -186,9 +186,11 @@ const DisplayDay = props => {
         <div className="flex-1">
           <table>
             <thead>
-              <th colspan={2}>
-                <h3>Day details</h3>
-              </th>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Day details</h3>
+                </th>
+              </tr>
             </thead>
             <tbody>
               <tr>
@@ -207,10 +209,13 @@ const DisplayDay = props => {
           </table>
           <table>
             <thead>
-              <th colspan={2}>
-                <h3>Air</h3>
-              </th>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Air</h3>
+                </th>
+              </tr>
             </thead>
+<<<<<<< HEAD
             <tr>
               <th>Pressure</th>
               <td>{weather.pressure * 1000} (in pascals)</td>
@@ -227,13 +232,36 @@ const DisplayDay = props => {
               <th>UVI</th>
               <td>{weather.uvi}</td>
             </tr>
+=======
+            <tbody>
+              <tr>
+                <th>Pressure</th>
+                <td>{weather.pressure * 1000} (in pascals)</td>
+              </tr>
+              <tr>
+                <th>Huminity</th>
+                <td>{weather.humidity}</td>
+              </tr>
+              <tr>
+                <th>Dew Point</th>
+                <td>{convert(weather.dew_point, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>UVI</th>
+                <td>{weather.uvi}</td>
+              </tr>
+            </tbody>
+>>>>>>> f38510cdca3329da69f90d8a7c377928ebc97184
           </table>
           <table>
             <thead>
-              <th colspan={2}>
-                <h3>Other</h3>
-              </th>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Other</h3>
+                </th>
+              </tr>
             </thead>
+<<<<<<< HEAD
             <tr>
               <th>Description</th>
               <td>{weather.weather[0].description}</td>
@@ -254,14 +282,41 @@ const DisplayDay = props => {
                   : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
               </td>
             </tr>
+=======
+            <tbody>
+              <tr>
+                <th>Description</th>
+                <td>{weather.weather[0].description}</td>
+              </tr>
+              <tr>
+                <th>Clouds</th>
+                <td>{weather.clouds}%</td>
+              </tr>
+              <tr>
+                <th>Wind Tempature</th>
+                <td>{convert(weather.wind_deg, props.unit)}</td>
+              </tr>
+              <tr>
+                <th>Wind Speed</th>
+                <td>
+                  {props.unit === 'i'
+                    ? Math.round(weather.wind_speed * 2.23694).toString() +
+                      ' mph'
+                    : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
+                </td>
+              </tr>
+            </tbody>
+>>>>>>> f38510cdca3329da69f90d8a7c377928ebc97184
           </table>
         </div>
         <div className="flex-2">
           <table>
             <thead>
-              <th colspan={2}>
-                <h3>Tempature</h3>
-              </th>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Tempature</h3>
+                </th>
+              </tr>
             </thead>
             <tbody>
               <tr>
@@ -288,9 +343,11 @@ const DisplayDay = props => {
           </table>
           <table>
             <thead>
-              <th colspan={2}>
-                <h3>Feels Like</h3>
-              </th>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Feels Like</h3>
+                </th>
+              </tr>
             </thead>
             <tbody>
               <tr>
