@@ -215,7 +215,6 @@ const DisplayDay = props => {
                 </th>
               </tr>
             </thead>
-
             <tbody>
               <tr>
                 <th>Pressure</th>
@@ -223,7 +222,7 @@ const DisplayDay = props => {
               </tr>
               <tr>
                 <th>Huminity</th>
-                <td>{weather.humidity}</td>
+                <td>{weather.humidity}%</td>
               </tr>
               <tr>
                 <th>Dew Point</th>
@@ -251,19 +250,6 @@ const DisplayDay = props => {
               <tr>
                 <th>Clouds</th>
                 <td>{weather.clouds}%</td>
-              </tr>
-              <tr>
-                <th>Wind Tempature</th>
-                <td>{convert(weather.wind_deg, props.unit)}</td>
-              </tr>
-              <tr>
-                <th>Wind Speed</th>
-                <td>
-                  {props.unit === 'i'
-                    ? Math.round(weather.wind_speed * 2.23694).toString() +
-                      ' mph'
-                    : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
-                </td>
               </tr>
             </tbody>
           </table>
@@ -326,6 +312,27 @@ const DisplayDay = props => {
                 <td>{convert(weather.feels_like.night, props.unit)}</td>
               </tr>
             </tbody>
+          </table>
+          <table>
+            <thead>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Wind</h3>
+                </th>
+              </tr>
+            </thead>
+            <tr>
+              <th>Wind Direction</th>
+              <td>{weather.wind_deg} ˚</td>
+            </tr>
+            <tr>
+              <th>Wind Speed</th>
+              <td>
+                {props.unit === 'i'
+                  ? Math.round(weather.wind_speed * 2.23694).toString() + ' mph'
+                  : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
+              </td>
+            </tr>
           </table>
         </div>
       </div>

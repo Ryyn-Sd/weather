@@ -23,7 +23,7 @@ module.exports = (req, res) => {
           return res.json({})
         })
     } else if (req.query.zip) {
-      if (!Number(req.query.zip)) throw null
+      if (!Number(req.query.zip) || Number(req.query.zip) < 10000 || Number(req.query.zip) > 99999) throw null
       axios
         .get(
           `https://api.openweathermap.org/data/2.5/weather?zip=${encodeURIComponent(
@@ -56,14 +56,14 @@ module.exports = (req, res) => {
         .get(
           `http://ip-api.com/json/${encodeURIComponent(
             req.headers['x-forwarded-for'] === '::1' ||
-              req.headers['x-forwarded-for'] === '127.0.0.1'
+              req.headers['x-forwarded-for'].includes('127.0.0.1')
               ? ''
               : req.headers['x-forwarded-for']
           )}?fields=zip,lat,lon`
         )
         .then(resp => {
           const { lat, lon, zip } = resp.data
-          if (!(Number(lat) && Number(lon) && Number(zip))) throw null
+          if (!(Number(lat) && Number(lon) && Number(zip)) || Number(zip) < 10000 || Number(zip) > 99999) throw null
           axios
             .get(
               `https://api.openweathermap.org/data/2.5/onecall?lat=${encodeURIComponent(
