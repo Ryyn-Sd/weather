@@ -25,8 +25,8 @@ const toTimeString = date =>
     new Date(date * 1000).getHours() >= 12 ? 'PM' : 'AM'
   }`
 
-// const round = (num, amount) =>
-//   Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount || 0);
+const round = (num, amount) =>
+  Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount || 0);
 
 const fetchWeather = async (callback, zip) => {
   axios
@@ -218,7 +218,7 @@ const DisplayDay = props => {
             <tbody>
               <tr>
                 <th>Pressure</th>
-                <td>{weather.pressure * 1000} (in pascals)</td>
+                <td>{round(weather.pressure * 100 / 3386, 2)} (inHg)</td>
               </tr>
               <tr>
                 <th>Humidity</th>
@@ -259,13 +259,13 @@ const DisplayDay = props => {
             <thead>
               <tr>
                 <th colSpan={2}>
-                  <h3>Tempature</h3>
+                  <h3>Temperature</h3>
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th>Tempature</th>
+                <th>Temperature</th>
                 <td>{convert(weather.temp.day, props.unit)}</td>
               </tr>
               <tr>
@@ -296,7 +296,7 @@ const DisplayDay = props => {
             </thead>
             <tbody>
               <tr>
-                <th>Tempature</th>
+                <th>Temperature</th>
                 <td>{convert(weather.feels_like.day, props.unit)}</td>
               </tr>
               <tr>

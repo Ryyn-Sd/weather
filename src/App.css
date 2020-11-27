@@ -9,8 +9,15 @@ ul {
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-width: 100vw;
   text-align: center;
-  background-color: skyblue;
+  background: rgb(61,68,170);
+  background: -moz-linear-gradient(30deg, rgba(61,68,170,1) 0%, rgba(117,153,217,1) 100%);
+  background: -webkit-linear-gradient(30deg, rgba(61,68,170,1) 0%, rgba(117,153,217,1) 100%);
+  background: linear-gradient(30deg, rgba(61,68,170,1) 0%, rgba(117,153,217,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3d44aa",endColorstr="#7599d9",GradientType=1);
   color: black;
 }
 
@@ -29,7 +36,6 @@ li {
 
 li:hover {
   background-color: #111;
-  height: 24.25px;
 }
 
 table {
