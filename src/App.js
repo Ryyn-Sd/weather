@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import icons from './icons'
-import { convert, toTimeString, fetchWeather, dt } from './utilities'
-import DisplayDay from './components/DisplayDay'
+import { fetchWeather } from './utilities'
+import Hourly from './components/Hourly'
+import Daily from './components/Daily'
 
 const App = () => {
   const [section, setSection] = useState('')
@@ -68,72 +69,6 @@ const App = () => {
         <Hourly area={area} weather={weather} unit={unit} />
       ) : null}
     </>
-  )
-}
-const Daily = props => {
-  const [day, setDay] = useState(-1)
-  const weather = props.weather.daily || Array(7).fill('Loading...')
-  if (weather.weather) weather.sort((a, b) => a.dt - b.dt)
-  return (
-    <div className="section daily">
-      <h1>Daily Weather for {props.area}</h1>
-      <table>
-        <tbody>
-          <tr key={0}>
-            <th>Day</th>
-            <th>Weather</th>
-          </tr>
-          {weather.map((v, i) => (
-            <tr key={i + 1}>
-              <td>{dt(v.dt)}</td>
-              <td>
-                {v.weather
-                  ? `${v.weather[0].description}, the tempature is ${convert(
-                      v.temp.day,
-                      props.unit
-                    )}, the high is ${convert(
-                      v.temp.max,
-                      props.unit
-                    )}, the low is ${convert(v.temp.min, props.unit)}`
-                  : v}{' '}
-                <button onClick={() => setDay(i)}>Find out more</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {day >= 0 ? (
-        <DisplayDay weather={weather[day]} unit={props.unit} />
-      ) : null}
-    </div>
-  )
-}
-
-function Hourly(props) {
-  const weather = props.weather.hourly || Array(24).fill('Loading...')
-  if (weather.weather) weather.sort((a, b) => a.dt - b.dt)
-  console.log(weather)
-  return (
-    <div className="section hourly">
-      <h1>Hourly Weather for {props.area}</h1>
-      <table>
-        <tbody>
-          <tr key={0}>
-            <th>Time</th>
-            <th>Weather</th>
-          </tr>
-          {weather.map((v, i) => (
-            <tr key={i + 1}>
-              <td>{toTimeString(v.dt)}</td>
-              <td>
-                {v.weather[0].description}, the tempature is{' '}
-                {convert(v.temp, props.unit)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   )
 }
 
