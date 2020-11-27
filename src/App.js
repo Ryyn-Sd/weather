@@ -28,12 +28,11 @@ const toTimeString = date =>
 // const round = (num, amount) =>
 //   Math.round(Number(num) * 10 ** (amount || 0)) / 10 ** (amount || 0);
 
-const fetchWeather = async (value, callback) =>
+const fetchWeather = async (callback, zip) => {
   axios
-    .get(
-      `https://weather-lilac.vercel.app/api?value=${encodeURIComponent(value)}`
-    )
+    .get(zip ? `./api?zip=${encodeURIComponent(zip)}` : `./api`)
     .then(res => callback(res.data))
+}
 
 const dt = dt =>
   new Date(dt * 1000).toDateString() === new Date().toDateString()
@@ -51,13 +50,10 @@ const App = () => {
   useEffect(() => {
     const localUnit = localStorage.getItem('unit')
     if (localUnit === 'm' || localUnit === 'i') setUnit(localUnit)
-    axios
-      .get(`https://weather-lilac.vercel.app/api/ip`)
-      .then(res => res.data.zip)
-      .then(res => {
-        setArea(res)
-        fetchWeather(res, setWeather)
-      })
+    fetchWeather(weather => {
+      setWeather(weather)
+      setArea(weather.zip)
+    })
   }, [])
   return (
     <>
@@ -98,7 +94,8 @@ const App = () => {
           <h1>Viewing weather for {area}</h1>
           <h3>
             Click on Daily or Hourly to see the weather. You can change the zip
-            code in the top right corner. You can change the units using the metric checkbox.
+            code in the top right corner. You can change the units using the
+            metric checkbox.
           </h3>
         </div>
       ) : null}
