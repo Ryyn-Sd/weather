@@ -1,5 +1,6 @@
 const axios = require('axios')
 module.exports = (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=300')
   if (req.headers.host)
     res.setHeader('Access-Control-Allow-Origin', req.headers.host)
   if (req.query.lat && req.query.lon) {
