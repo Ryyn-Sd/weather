@@ -217,7 +217,7 @@ const DisplayDay = props => {
             </tr>
             <tr>
               <th>Huminity</th>
-              <td>{weather.humidity}</td>
+              <td>{weather.humidity}%</td>
             </tr>
             <tr>
               <th>Dew Point</th>
@@ -243,8 +243,8 @@ const DisplayDay = props => {
               <td>{weather.clouds}%</td>
             </tr>
             <tr>
-              <th>Wind Tempature</th>
-              <td>{convert(weather.wind_deg, props.unit)}</td>
+              <th>Wind Direction</th>
+              <td>{weather.wind_deg} ˚</td>
             </tr>
             <tr>
               <th>Wind Speed</th>
