@@ -215,24 +215,6 @@ const DisplayDay = props => {
                 </th>
               </tr>
             </thead>
-<<<<<<< HEAD
-            <tr>
-              <th>Pressure</th>
-              <td>{weather.pressure * 1000} (in pascals)</td>
-            </tr>
-            <tr>
-              <th>Huminity</th>
-              <td>{weather.humidity}%</td>
-            </tr>
-            <tr>
-              <th>Dew Point</th>
-              <td>{convert(weather.dew_point, props.unit)}</td>
-            </tr>
-            <tr>
-              <th>UVI</th>
-              <td>{weather.uvi}</td>
-            </tr>
-=======
             <tbody>
               <tr>
                 <th>Pressure</th>
@@ -240,7 +222,7 @@ const DisplayDay = props => {
               </tr>
               <tr>
                 <th>Huminity</th>
-                <td>{weather.humidity}</td>
+                <td>{weather.humidity}%</td>
               </tr>
               <tr>
                 <th>Dew Point</th>
@@ -251,7 +233,6 @@ const DisplayDay = props => {
                 <td>{weather.uvi}</td>
               </tr>
             </tbody>
->>>>>>> f38510cdca3329da69f90d8a7c377928ebc97184
           </table>
           <table>
             <thead>
@@ -261,28 +242,6 @@ const DisplayDay = props => {
                 </th>
               </tr>
             </thead>
-<<<<<<< HEAD
-            <tr>
-              <th>Description</th>
-              <td>{weather.weather[0].description}</td>
-            </tr>
-            <tr>
-              <th>Clouds</th>
-              <td>{weather.clouds}%</td>
-            </tr>
-            <tr>
-              <th>Wind Direction</th>
-              <td>{weather.wind_deg} ˚</td>
-            </tr>
-            <tr>
-              <th>Wind Speed</th>
-              <td>
-                {props.unit === 'i'
-                  ? Math.round(weather.wind_speed * 2.23694).toString() + ' mph'
-                  : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
-              </td>
-            </tr>
-=======
             <tbody>
               <tr>
                 <th>Description</th>
@@ -292,21 +251,7 @@ const DisplayDay = props => {
                 <th>Clouds</th>
                 <td>{weather.clouds}%</td>
               </tr>
-              <tr>
-                <th>Wind Tempature</th>
-                <td>{convert(weather.wind_deg, props.unit)}</td>
-              </tr>
-              <tr>
-                <th>Wind Speed</th>
-                <td>
-                  {props.unit === 'i'
-                    ? Math.round(weather.wind_speed * 2.23694).toString() +
-                      ' mph'
-                    : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
-                </td>
-              </tr>
             </tbody>
->>>>>>> f38510cdca3329da69f90d8a7c377928ebc97184
           </table>
         </div>
         <div className="flex-2">
@@ -367,6 +312,27 @@ const DisplayDay = props => {
                 <td>{convert(weather.feels_like.night, props.unit)}</td>
               </tr>
             </tbody>
+          </table>
+          <table>
+            <thead>
+              <tr>
+                <th colSpan={2}>
+                  <h3>Wind</h3>
+                </th>
+              </tr>
+            </thead>
+            <tr>
+              <th>Wind Direction</th>
+              <td>{weather.wind_deg} ˚</td>
+            </tr>
+            <tr>
+              <th>Wind Speed</th>
+              <td>
+                {props.unit === 'i'
+                  ? Math.round(weather.wind_speed * 2.23694).toString() + ' mph'
+                  : Math.round(weather.wind_speed * 3.6).toString() + ' kmh'}
+              </td>
+            </tr>
           </table>
         </div>
       </div>
