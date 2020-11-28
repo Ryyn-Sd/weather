@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -6,9 +8,10 @@ ul {
   background-color: #333;
 }
 
+
 body {
   margin: 0;
-  padding: 0;
+  font-family: 'Open Sans', sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
   min-width: 100vw;
@@ -51,9 +54,12 @@ li:hover {
 }
 
 table {
-  width: 100%;
-  text-align: center;
+  width: 75%;
+  border-collapse: collapse;
+  padding: 5px;
 }
+
+
 .flex-container {
   display: flex;
 }
@@ -72,9 +78,14 @@ table {
   width: 50%;
 }
 
-table,
-th,
-td {
+.DisplayDay table,
+.DisplayDay th,
+.DisplayDay td {
   border: 1px solid black;
   border-collapse: collapse;
+}
+#day-table th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid rgb(0, 0, 0);
 }
