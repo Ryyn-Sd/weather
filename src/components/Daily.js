@@ -21,12 +21,12 @@ const Daily = props => {
               <td>
                 {v.weather
                   ? `${v.weather[0].description}, the tempature is ${convert(
-                    v.temp.day,
-                    props.unit
-                  )}, the high is ${convert(
-                    v.temp.max,
-                    props.unit
-                  )}, the low is ${convert(v.temp.min, props.unit)}`
+                      v.temp.day,
+                      props.unit
+                    )}, the high is ${convert(
+                      v.temp.max,
+                      props.unit
+                    )}, the low is ${convert(v.temp.min, props.unit)}`
                   : v}{' '}
                 <button onClick={() => setDay(i)}>Find out more</button>
               </td>

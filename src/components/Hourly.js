@@ -1,5 +1,5 @@
 import React from 'react'
-import { convert, toTimeString } from "../utilities"
+import { convert, toTimeString } from '../utilities'
 
 function Hourly(props) {
   const weather = props.weather.hourly || Array(24).fill('Loading...')

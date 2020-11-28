@@ -44,7 +44,7 @@ const DisplayDay = props => {
             <tbody>
               <tr>
                 <th>Pressure</th>
-                <td>{round(weather.pressure * 100 / 3386, 2)} (inHg)</td>
+                <td>{round((weather.pressure * 100) / 3386, 2)} (inHg)</td>
               </tr>
               <tr>
                 <th>Humidity</th>
