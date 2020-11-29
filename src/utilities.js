@@ -164,36 +164,66 @@ const fetchWeather = async (callback, zip) => {
                   Math.floor(Math.random() * weatherConditions.length)
                 ]
               ],
-              pop: Math.random() > 0.5,
+              pop: Math.random() > 0.5
             }
           }),
-        daily: Array(7).fill().map((v, i) => {
-          const dt = Math.floor(((()=>{const d=new Date();d.setHours(12,0,0,0);return d.getTime()})() + 86400 * i)/1000)
-          return {
-            dt: dt,
-            sunrise: Math.floor(sunriseset(40.78, -73.98, true, new Date(dt * 1000)) / 1000),
-            sunset: Math.floor(sunriseset(40.78, -73.98, false, new Date(dt * 1000)) / 1000),
-            temp: Object.fromEntries(Array(6).fill().sort((a, b) => a - b).map((v, i)=>{
-              return [['min', 'morn', 'night', 'eve', 'day', 'max'][i], Math.random() * 50 + 250]
-            })),
-            feels_like: Object.fromEntries(Array(4).fill().sort((a, b) => a - b).map((v, i)=>{
-              return [['morn', 'night', 'eve', 'day'][i], Math.random() * 50 + 250]
-            })),
-            pressure: Math.floor(Math.random() * 250 + 850),
-            humidity: Math.floor(Math.random() * 100),
-            dew_point: Math.random() * 15 + 273.15,
-            uvi: Math.floor(Math.random() * 10),
-            clouds: Math.floor(Math.random() * 101),
-            wind_speed: Math.floor(Math.random() * 50),
-            wind_deg: Math.floor(Math.random() * 361),
-            weather: [
-              weatherConditions[
-                Math.floor(Math.random() * weatherConditions.length)
-              ]
-            ],
-            pop: Math.random() > 0.5,
-          }
-        })
+        daily: Array(7)
+          .fill()
+          .map((v, i) => {
+            const dt = Math.floor(
+              (() => {
+                const d = new Date()
+                d.setHours(12, 0, 0, 0)
+                return d.getTime()
+              })() /
+                1000 +
+                86400 * i
+            )
+            return {
+              dt: dt,
+              sunrise: Math.floor(
+                sunriseset(40.78, -73.98, true, new Date(dt * 1000)) / 1000
+              ),
+              sunset: Math.floor(
+                sunriseset(40.78, -73.98, false, new Date(dt * 1000)) / 1000
+              ),
+              temp: Object.fromEntries(
+                Array(6)
+                  .fill()
+                  .sort((a, b) => a - b)
+                  .map((v, i) => {
+                    return [
+                      ['min', 'morn', 'night', 'eve', 'day', 'max'][i],
+                      Math.random() * 50 + 250
+                    ]
+                  })
+              ),
+              feels_like: Object.fromEntries(
+                Array(4)
+                  .fill()
+                  .sort((a, b) => a - b)
+                  .map((v, i) => {
+                    return [
+                      ['morn', 'night', 'eve', 'day'][i],
+                      Math.random() * 50 + 250
+                    ]
+                  })
+              ),
+              pressure: Math.floor(Math.random() * 250 + 850),
+              humidity: Math.floor(Math.random() * 100),
+              dew_point: Math.random() * 15 + 273.15,
+              uvi: Math.floor(Math.random() * 10),
+              clouds: Math.floor(Math.random() * 101),
+              wind_speed: Math.floor(Math.random() * 50),
+              wind_deg: Math.floor(Math.random() * 361),
+              weather: [
+                weatherConditions[
+                  Math.floor(Math.random() * weatherConditions.length)
+                ]
+              ],
+              pop: Math.random() > 0.5
+            }
+          })
       }
       callback(data)
     } else {
