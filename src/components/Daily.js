@@ -9,7 +9,7 @@ const Daily = props => {
   return (
     <div className="section daily">
       <h1>Daily Weather for {props.area}</h1>
-      <table>
+      <table id="day-table">
         <tbody>
           <tr key={0}>
             <th>Day</th>
