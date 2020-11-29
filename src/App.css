@@ -8,7 +8,6 @@ ul {
   background-color: #333;
 }
 
-
 body {
   margin: 0;
   font-family: 'Open Sans', sans-serif;
@@ -59,7 +58,6 @@ table {
   padding: 5px;
 }
 
-
 .flex-container {
   display: flex;
 }
@@ -84,7 +82,8 @@ table {
   border: 1px solid black;
   border-collapse: collapse;
 }
-#day-table th, td {
+#day-table th,
+td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid rgb(0, 0, 0);

@@ -50,7 +50,7 @@ const App = () => {
         </li>
       </ul>
       {weather.current ? (
-        <img src={icons[weather.daily[0].weather[0].icon]} alt="" />
+        <img src={icons[weather.current.weather[0].icon]} alt="" />
       ) : null}
       {section !== 'daily' && section !== 'hourly' ? (
         <div>
