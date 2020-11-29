@@ -20,7 +20,7 @@ const Daily = props => {
               <td>{dt(v.dt)}</td>
               <td>
                 {v.weather
-                  ? `${v.weather[0].description}, the tempature is ${convert(
+                  ? `${v.weather[0].description}, the temperature is ${convert(
                       v.temp.day,
                       props.unit
                     )}, the high is ${convert(

@@ -1,4 +1,4 @@
-const axios = require('axios')
+import axios from 'axios'
 
 const convert = (start, endUnit, round) => {
   const temp =
@@ -39,4 +39,4 @@ const dt = dt =>
     ? 'Tomorrow'
     : new Date(dt * 1000).toDateString()
 
-export { convert, toTimeString, round, fetchWeather, dt }
+export { convert, toTimeString, round, fetchWeather, dt, isDev, isProd, isTest }
