@@ -170,7 +170,7 @@ const fetchWeather = async (callback, zip) => {
                       Math.floor(Math.random() * weatherConditions.length)
                     ]
                   ],
-                  pop: Math.random() > 0.5
+                  pop: Number(Math.random() > 0.5)
                 }
               }),
             daily: Array(7)
@@ -227,7 +227,7 @@ const fetchWeather = async (callback, zip) => {
                       Math.floor(Math.random() * weatherConditions.length)
                     ]
                   ],
-                  pop: Math.random() > 0.5
+                  pop: Number(Math.random() > 0.5)
                 }
               })
           }

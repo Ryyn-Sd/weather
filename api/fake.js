@@ -331,12 +331,64 @@ const weatherConditions = [
   }
 ]
 
+// https://math.stackexchange.com/questions/2186683#comment7725199_2598266
+const sunriseset = (a, b, c, d = new Date()) => {
+  const e = new Date(d.getFullYear(), 0, 0),
+    f = Math.floor(
+      (d - e + 1e3 * (60 * (e.getTimezoneOffset() - d.getTimezoneOffset()))) /
+        86400000
+    ),
+    g = Math.PI / 180,
+    h = 180 / Math.PI,
+    i = f + ((c ? 6 : 18) - b / 15) / 24,
+    j = 0.9856 * i - 3.289,
+    k =
+      j +
+      1.916 * Math.sin(j * g) +
+      0.02 * Math.sin(2 * j * g) +
+      282.634 +
+      (360 < j + 1.916 * Math.sin(j * g) + 0.02 * Math.sin(2 * j * g) + 282.634
+        ? -360
+        : 0 > j + 1.916 * Math.sin(j * g) + 0.02 * Math.sin(2 * j * g) + 282.634
+        ? 360
+        : 0),
+    l =
+      ((360 < h * Math.atan(0.91764 * Math.tan(k * g))
+        ? h * Math.atan(0.91764 * Math.tan(k * g)) - 360
+        : 0 > h * Math.atan(0.91764 * Math.tan(k * g))
+        ? h * Math.atan(0.91764 * Math.tan(k * g)) + 360
+        : h * Math.atan(0.91764 * Math.tan(k * g))) +
+        (90 * Math.floor(k / 90) -
+          90 *
+            Math.floor(
+              (360 < h * Math.atan(0.91764 * Math.tan(k * g))
+                ? h * Math.atan(0.91764 * Math.tan(k * g)) - 360
+                : 0 > h * Math.atan(0.91764 * Math.tan(k * g))
+                ? h * Math.atan(0.91764 * Math.tan(k * g)) + 360
+                : h * Math.atan(0.91764 * Math.tan(k * g))) / 90
+            ))) /
+      15,
+    m = 0.39782 * Math.sin(k * g),
+    n = Math.cos(Math.asin(m)),
+    o = (Math.cos((545 / 6) * g) - m * Math.sin(a * g)) / (n * Math.cos(a * g)),
+    p = (c ? 360 - h * Math.acos(o) : h * Math.acos(o)) / 15,
+    q = p + l - 0.06571 * i - 6.622,
+    r = q - b / 15 + (24 < q - b / 15 ? -24 : 0 > q - b / 15 ? 24 : 0),
+    s = new Date(1e3 * (60 * (60 * r)))
+  return (
+    s.setFullYear(d.getFullYear()),
+    s.setMonth(d.getMonth()),
+    s.setDate(d.getDate()),
+    s
+  )
+}
+
 const data = {
   lat: 40.78,
   lon: -73.98,
   timezone: 'America/New_York',
   timezone_offset: -18000,
-  zip: zip || Math.floor(Math.random() * 99450) + 501,
+  zip: Math.floor(Math.random() * 99450) + 501,
   current: {
     dt: Math.floor(Date.now() / 1000),
     sunrise: Math.floor(sunriseset(40.78, -73.98, true).getTime() / 1000),
@@ -406,7 +458,7 @@ const data = {
             Math.floor(Math.random() * weatherConditions.length)
           ]
         ],
-        pop: Math.random() > 0.5
+        pop: Number(Math.random() > 0.5)
       }
     }),
   daily: Array(7)
@@ -463,7 +515,7 @@ const data = {
             Math.floor(Math.random() * weatherConditions.length)
           ]
         ],
-        pop: Math.random() > 0.5
+        pop: Number(Math.random() > 0.5)
       }
     })
 }
